@@ -75,20 +75,29 @@ app.post(
     '/scan-result', ( req, res ) => {
 
         const body = req.body;
+
+        for (let key in body)
+        {
+            console.log(`key: ${key} -> ${body[key]}`);
+        }
+
         let rowAmount = 0;
         connection.query(
 
-            `INSERT INTO scan (json) VALUES (${JSON.stringify(body.scan)})`,
+            `INSERT INTO scan (json) VALUES ('${JSON.stringify(body)}')`,
             (err, rows) => {
 
-                if ( err ) console.log(`Database error`);
-                rowAmount = rows;
-                console.log(`Query result: ${rows}`);
+                if ( err ) 
+                {
+                    console.log(`Database error`);
+                    throw err;
+                }
+                
             }
 
         );
         
-        console.log(`Body scan: ${body.scan}`);
+
     res.send(`Body: ${JSON.stringify(body)}, rows from inserted: ${rowAmount}`);
 
 });
